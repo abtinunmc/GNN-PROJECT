@@ -5,11 +5,9 @@ __pycache__/
 *.so
 
 # Data and Artifacts
-data/
-logs/
+# We explicitly ignore the massive .h5 files because they exceed GitHub's 100MB limit
+data/processed/h5/
 *.h5
-*.png
-*.csv
 
 # OS
 .DS_Store

@@ -1,0 +1,90 @@
+================================================================================
+SOZ Localization GNN - Bandpass Filter Log
+Date: 2026-04-21
+================================================================================
+
+CONFIGURATION
+-------------
+Input:  ~/Documents/gnn project/preprocessed/preprocessed_ieeg_car.h5
+Output: ~/Documents/gnn project/preprocessed/preprocessed_ieeg_car_bp.h5
+
+Filter Type: Elliptic (Cauer)
+Low Cutoff:  1.0 Hz (removes DC drift)
+High Cutoff: 250.0 Hz (preserves HFOs)
+Order:       4
+Passband Ripple:      0.1 dB
+Stopband Attenuation: 40 dB
+
+PROCESSING SUMMARY
+------------------
+Total recordings: 103
+Successfully processed: 103/103
+Runtime: ~82 seconds
+
+NYQUIST ADJUSTMENTS
+-------------------
+Recordings with sampling rate < 500 Hz required adjusted cutoffs:
+
+1. sub-umf003_ses-presurgery_run-01
+   sfreq=499.75 Hz, high_freq adjusted to 248.88 Hz
+
+2. sub-ummc001 (runs 01-03)
+   sfreq=499.75 Hz, high_freq adjusted to 248.88 Hz
+
+3. sub-ummc002 (runs 01-03)
+   sfreq=499.75 Hz, high_freq adjusted to 248.88 Hz
+
+4. sub-ummc003 (runs 01-03)
+   sfreq=249.88 Hz, high_freq adjusted to 123.94 Hz
+
+5. sub-ummc004 (runs 01-03)
+   sfreq=249.88 Hz, high_freq adjusted to 123.94 Hz
+
+6. sub-ummc006 (runs 01-03)
+   sfreq=249.88 Hz, high_freq adjusted to 123.94 Hz
+
+7. sub-ummc008_ses-presurgery_run-01
+   sfreq=249.88 Hz, high_freq adjusted to 123.94 Hz
+
+WARNINGS
+--------
+4 recordings had 0 samples (data too short for filtering):
+- These recordings were processed but output contains zeros
+
+OUTPUT FILES
+------------
+1. preprocessed/preprocessed_ieeg_car_bp.h5 (3.1 GB)
+   - Bandpass filtered data for all recordings
+   - Attributes added: bandpass_applied, bandpass_low, bandpass_high,
+                       filter_type, filter_order
+
+2. preprocessed/bandpass_filter_response.png
+   - Filter magnitude and phase response
+   - Passband detail
+   - Impulse response
+
+3. preprocessed/bandpass_demo.png
+   - Single channel before/after comparison
+   - Time domain and power spectrum
+
+4. preprocessed/bandpass_bands.png
+   - Power retention by frequency band
+   - Multi-channel spectral analysis
+
+WHY ELLIPTIC FILTER?
+--------------------
+- Steepest roll-off of any filter type
+- Most efficient transition band
+- Small ripples acceptable for neural signals
+- Sharp cutoffs preserve HFO band (80-500 Hz)
+
+IMPLEMENTATION NOTES
+--------------------
+1. Used SOS (second-order sections) format for numerical stability
+2. Applied sosfiltfilt for zero-phase filtering (no timing distortion)
+3. Filter cached by sampling rate to avoid redesign
+4. Frequencies normalized to Nyquist for digital filter design
+
+================================================================================
+End of Log
+================================================================================

@@ -1,0 +1,8 @@
+SOZ Localization GNN - Project Run Log
+
+This file stores one cumulative summary entry per pipeline stage run.
+
+[2026-04-22] Updates to scripts/preprocess.py:
+- Improved robust error handling for missing `participants.tsv` and `participant_id` column.
+- Handled edge cases where recordings have 0 good channels remaining in raw data (`no_good_channels_in_raw`).
+- Fixed HDF5 group name collisions by using the original `.vhdr` filename stem instead of a potentially non-unique `{subject}_{session}_{run}` format.

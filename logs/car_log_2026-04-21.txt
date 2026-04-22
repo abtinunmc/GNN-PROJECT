@@ -1,0 +1,61 @@
+================================================================================
+SOZ Localization GNN - CAR (Common Average Reference) Log
+Date: 2026-04-21
+================================================================================
+
+CONFIGURATION
+-------------
+Input:  ~/Documents/gnn project/preprocessed/preprocessed_ieeg.h5
+Output: ~/Documents/gnn project/preprocessed/preprocessed_ieeg_car.h5
+
+CAR Formula: x_car[ch, t] = x_raw[ch, t] - mean(x_raw[:, t])
+
+PROCESSING SUMMARY
+------------------
+Total recordings: 103
+Successfully processed: 103/103
+Failed: 0
+Runtime: ~80 seconds
+
+WHAT CAR DOES
+-------------
+1. Computes mean signal across all electrodes at each time point
+2. Subtracts this "common average" from each channel
+3. Removes global noise (movement, distant activity, reference bias)
+4. Preserves local/focal activity (important for SOZ localization)
+
+OUTPUT FILES
+------------
+1. preprocessed/preprocessed_ieeg_car.h5
+   - CAR-referenced data for all recordings
+   - Same structure as input HDF5
+   - Added attribute: car_applied = True
+
+2. preprocessed/car_demo.png
+   - Single channel before/after CAR
+   - Time domain and power spectrum comparison
+
+3. preprocessed/car_multichannel.png
+   - Multi-channel view (10 channels)
+   - Shows common signal that was removed
+
+4. preprocessed/car_statistics.png
+   - Per-channel variance comparison
+   - Correlation reduction visualization
+
+IMPLEMENTATION DETAILS
+----------------------
+Core operation:
+```python
+common_average = np.mean(data, axis=0, keepdims=True)  # Shape: (1, n_samples)
+data_car = data - common_average  # Broadcasts to (n_channels, n_samples)
+```
+
+Effects:
+- Reduces inter-channel correlations
+- Removes reference electrode artifacts
+- Preserves channel-specific (focal) signals
+
+================================================================================
+End of Log
+================================================================================
