@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find ~/Desktop/ds003029/sub-jh101 -type f -name *.edf -o -name *.vhdr -o -name *.set)",
+      "Bash(python step1.py)",
+      "Bash(python3:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python preprocess.py)"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data and Artifacts
+data/
+logs/
+*.h5
+*.png
+*.csv
+
+# OS
+.DS_Store
