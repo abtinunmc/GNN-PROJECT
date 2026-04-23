@@ -201,10 +201,18 @@ def compute_plv_matrix(data: np.ndarray, sfreq: float, band: tuple[float, float]
         except ValueError:
             phases[ch, :] = 0
 
+    # Discard 1 second from each edge to remove filter/Hilbert transients
+    trim_sec = 1.0
+    trim_samples = int(trim_sec * sfreq)
+    if 2 * trim_samples < n_samples:
+        valid_phases = phases[:, trim_samples:-trim_samples]
+    else:
+        valid_phases = phases
+
     plv_matrix = np.zeros((n_channels, n_channels))
     for i in range(n_channels):
         for j in range(i + 1, n_channels):
-            phase_diff = phases[i, :] - phases[j, :]
+            phase_diff = valid_phases[i, :] - valid_phases[j, :]
             plv = np.abs(np.mean(np.exp(1j * phase_diff)))
             plv_matrix[i, j] = plv
             plv_matrix[j, i] = plv

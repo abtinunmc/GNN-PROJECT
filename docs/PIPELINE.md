@@ -123,7 +123,7 @@ x_car[ch, t] = x_raw[ch, t] - mean(x_raw[:, t])
 **Edge features (channel pairs)**:
 - Correlation matrix
 - Coherence (low_gamma, hfo bands)
-- Phase Locking Value (PLV) in low_gamma
+- Phase Locking Value (PLV) in low_gamma (with 1-second edge trimming to mitigate Hilbert edge effects)
 
 ## Results Summary
 

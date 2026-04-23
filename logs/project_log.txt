@@ -12,3 +12,7 @@ This file stores one cumulative summary entry per pipeline stage run.
 - Updated all scripts (`preprocess.py`, `apply_car.py`, `apply_bandpass.py`, `extract_features.py`) and Markdown documentation to use dynamic paths for the new subdirectories.
 - Initialized Git repository and pushed code to `https://github.com/abtinunmc/GNN-PROJECT`.
 - Configured `.gitignore` to explicitly exclude `*.h5` files and the `data/processed/h5/` directory to prevent GitHub storage limit errors, while tracking metadata CSVs and generated figures.
+
+[2026-04-23] Pipeline Enhancements:
+- `scripts/extract_features.py`: Implemented 1.0-second edge trimming in `compute_plv_matrix` to mitigate Hilbert transform and filter edge effects (phase discontinuities).
+- `scripts/build_graph.py`: Refactored `build_edge_index_and_attr` to dynamically read edge feature names and shapes from the HDF5 file instead of using a hardcoded list, preventing future bugs when adding or removing connectivity metrics.
