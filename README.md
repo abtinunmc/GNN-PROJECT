@@ -30,3 +30,8 @@ python3 scripts/extract_features.py
 - Raw dataset location defaults to `~/Desktop/ds003029`
 - Override dataset path with `DS003029_DIR=/path/to/ds003029`
 - Generated artifacts are written under `data/processed/`
+
+## Version Control
+
+This project is tracked via Git and hosted on GitHub.
+**Important:** Due to GitHub's strict file size limits (100 MB), large intermediate data files (e.g., `*.h5` artifacts in `data/processed/h5/`) are explicitly excluded via `.gitignore`. The repository tracks all scripts, Markdown documentation, logs, output figures, and metadata CSVs.

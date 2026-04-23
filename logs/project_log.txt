@@ -6,3 +6,9 @@ This file stores one cumulative summary entry per pipeline stage run.
 - Improved robust error handling for missing `participants.tsv` and `participant_id` column.
 - Handled edge cases where recordings have 0 good channels remaining in raw data (`no_good_channels_in_raw`).
 - Fixed HDF5 group name collisions by using the original `.vhdr` filename stem instead of a potentially non-unique `{subject}_{session}_{run}` format.
+
+[2026-04-22] Project Restructure and Version Control:
+- Reorganized `data/processed/` into `h5/`, `csv/`, and `figures/` subdirectories.
+- Updated all scripts (`preprocess.py`, `apply_car.py`, `apply_bandpass.py`, `extract_features.py`) and Markdown documentation to use dynamic paths for the new subdirectories.
+- Initialized Git repository and pushed code to `https://github.com/abtinunmc/GNN-PROJECT`.
+- Configured `.gitignore` to explicitly exclude `*.h5` files and the `data/processed/h5/` directory to prevent GitHub storage limit errors, while tracking metadata CSVs and generated figures.
