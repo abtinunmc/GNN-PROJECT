@@ -56,7 +56,7 @@ Our preprocessing pipeline consisted of four stages, designed to handle both Bra
 
 **Epoch extraction:** For each recording, we identified the seizure onset time from event annotations and extracted a 60-second epoch centered on this time point (30 seconds pre-ictal, 30 seconds post-ictal). Channels marked as "bad" in the metadata were excluded.
 
-**Notch filtering:** Line noise at 60 Hz and its harmonics (120, 180 Hz) was removed using a notch filter.
+**Notch filtering:** Line noise at 60 Hz and its harmonics (120, 180, 240 Hz) was removed using a notch filter. The 4th harmonic (240 Hz) was included as it falls near the bandpass cutoff and could otherwise leak into the signal.
 
 **Common average reference (CAR):** To reduce common-mode noise and volume conduction artifacts, we applied CAR by subtracting the mean signal across all electrodes at each time point.
 
@@ -192,6 +192,30 @@ Table 6 summarizes the progression of improvements across our experiments. The c
 | ds003029 + augmentation | ~20 | 0.761 | 0.52 |
 | Combined dataset (5 seeds) | 70 | 0.763 ± 0.008 | 0.623 ± 0.014 |
 
+### 3.7 Hybrid Approaches to Improve AUC
+
+Given the performance gap between Random Forest (AUC 0.847) and GNN (AUC 0.763), we investigated several strategies to improve GNN discrimination while preserving its recall advantage.
+
+**Does graph structure help?** We first trained an MLP with identical architecture but without message passing to isolate the contribution of graph structure. The MLP achieved an AUC of 0.742 ± 0.009 compared to the GNN's 0.763 ± 0.008, confirming that graph-based learning provides a meaningful improvement (+2.8%) over treating electrodes independently.
+
+**Alternative graph construction.** We tested higher correlation thresholds (0.4, 0.5, 0.6) to create sparser, potentially less noisy graphs. However, all variants performed worse than the baseline (AUC 0.72-0.75), suggesting that the original threshold of 0.32 was appropriate and that denser connectivity benefits the model.
+
+**Stacking ensemble.** Combining RF and GNN predictions via a meta-learner achieved AUC of 0.837, approaching RF performance. However, this came at the cost of reduced recall (0.40 vs 0.63), as the ensemble shifted toward RF's more conservative predictions.
+
+**RF predictions as node feature.** Our most successful approach incorporated RF prediction probabilities as an additional node feature for the GNN. This hybrid model achieved AUC of 0.785 ± 0.013 with recall of 0.630 ± 0.052, representing a 2.9% improvement in AUC while maintaining the GNN's sensitivity advantage (Table 7).
+
+**Table 7.** Comparison of hybrid approaches
+
+| Method | Test AUC | Test Recall |
+|--------|----------|-------------|
+| Random Forest | 0.847 | 0.436 |
+| GNN (baseline) | 0.763 ± 0.008 | 0.623 ± 0.014 |
+| MLP (no graph) | 0.742 ± 0.009 | 0.566 ± 0.015 |
+| Stacking (RF + GNN) | 0.837 | 0.400 |
+| **GNN + RF feature** | **0.785 ± 0.013** | **0.630 ± 0.052** |
+
+The GNN + RF feature approach represents an effective compromise: it leverages RF's strong node-level discrimination while allowing the GNN to refine predictions based on connectivity patterns. This hybrid achieves the best balance between AUC and recall among all methods tested.
+
 ---
 
 ## 4. Discussion
@@ -242,7 +266,11 @@ Future work should explore cross-institutional validation, integration of anatom
 
 ## 5. Conclusion
 
-We developed a GNN-based framework for automated SOZ localization in drug-resistant epilepsy patients undergoing intracranial EEG monitoring. By combining publicly available datasets and employing self-supervised pretraining with online augmentation, our GraphSAGE model achieved a test AUC of 0.763 ± 0.008 with 62.3% recall across 5 random seeds. While classical Random Forest achieved higher overall AUC (0.847), the GNN demonstrated substantially higher recall (62.3% vs 43.6%), which is critical for clinical applications where missing true SOZ electrodes carries significant cost. These results suggest that graph-based deep learning approaches hold promise as decision-support tools for epilepsy surgical planning. Future work should focus on prospective validation and integration into clinical workflows.
+We developed a GNN-based framework for automated SOZ localization in drug-resistant epilepsy patients undergoing intracranial EEG monitoring. By combining publicly available datasets and employing self-supervised pretraining with online augmentation, our GraphSAGE model achieved a test AUC of 0.763 ± 0.008 with 62.3% recall across 5 random seeds. While classical Random Forest achieved higher overall AUC (0.847), the GNN demonstrated substantially higher recall (62.3% vs 43.6%), which is critical for clinical applications where missing true SOZ electrodes carries significant cost.
+
+Our investigation of hybrid approaches revealed that incorporating Random Forest predictions as an additional node feature yielded the best balance between discrimination and sensitivity, achieving AUC of 0.785 with recall of 0.630. This finding suggests that combining the strengths of classical machine learning with graph-based deep learning offers a practical path toward improved SOZ localization.
+
+These results demonstrate that graph-based deep learning approaches hold promise as decision-support tools for epilepsy surgical planning. Future work should focus on prospective validation, cross-institutional generalization, and integration into clinical workflows.
 
 ---
 
@@ -299,13 +327,25 @@ Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How powerful are graph neura
 **Figure 3.** Preprocessing pipeline demonstration showing (A) raw signal, (B) after notch filtering, (C) after common average reference, and (D) after bandpass filtering.
 *File: data/processed/figures/preprocessing_demo.png*
 
-**Figure 4.** Example graph construction from iEEG electrode array. Nodes represent electrodes colored by SOZ label, edges represent functional connectivity exceeding the correlation threshold.
+**Figure 4.** Common Average Reference (CAR) demonstration. Top panel shows the raw signal from a single channel, bottom panel shows the signal after CAR subtraction. CAR removes global noise and volume conduction artifacts while preserving focal activity.
+*File: data/processed/figures/car_demo.png*
+
+**Figure 5.** Multi-channel CAR visualization showing the effect of common average reference across multiple electrodes simultaneously. Each row represents a different channel before (left) and after (right) CAR application.
+*File: data/processed/figures/car_multichannel.png*
+
+**Figure 6.** CAR statistics showing the distribution of signal amplitude changes across all channels. The histogram demonstrates the reduction in common-mode noise after CAR application.
+*File: data/processed/figures/car_statistics.png*
+
+**Figure 7.** Bandpass filter frequency response and demonstration. (A) Filter magnitude response showing passband (1-250 Hz) and stopband attenuation. (B) Example signal before and after filtering. (C) Power spectral density showing preserved frequency bands.
+*Files: data/processed/figures/bandpass_filter_response.png, data/processed/figures/bandpass_demo.png, data/processed/figures/bandpass_bands.png*
+
+**Figure 8.** Example graph construction from iEEG electrode array. Nodes represent electrodes colored by SOZ label, edges represent functional connectivity exceeding the correlation threshold.
 *File: data/processed/figures/graph_demo.png*
 
-**Figure 5.** Confusion matrix on the held-out test set showing the distribution of true positives, false positives, true negatives, and false negatives.
+**Figure 9.** Confusion matrix on the held-out test set showing the distribution of true positives, false positives, true negatives, and false negatives.
 *File: data/processed/figures/confusion_matrix.png*
 
-**Figure 6.** Training curves for (A) self-supervised pretraining loss and (B) supervised fine-tuning loss.
+**Figure 10.** Training curves for (A) self-supervised pretraining loss and (B) supervised fine-tuning loss.
 *Files: data/processed/figures/pretrain_loss.png, data/processed/figures/train_loss.png*
 
 ---

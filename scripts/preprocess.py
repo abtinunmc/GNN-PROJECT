@@ -220,10 +220,10 @@ def preprocess_raw(raw: mne.io.Raw, good_channels: list, bad_channels: list) -> 
     # Load data into memory
     raw.load_data()
 
-    # Apply notch filter for line noise (60 Hz and harmonics)
+    # Apply notch filter for line noise (60 Hz and harmonics up to 240 Hz)
     # Only use frequencies below Nyquist
     nyquist = raw.info['sfreq'] / 2
-    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ*2, NOTCH_FREQ*3] if f < nyquist]
+    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ*2, NOTCH_FREQ*3, NOTCH_FREQ*4] if f < nyquist]
     if notch_freqs:
         raw.notch_filter(freqs=notch_freqs, picks='all', verbose=False)
 
@@ -561,10 +561,10 @@ def plot_preprocessing_demo(data_dir: Path, output_dir: Path):
     data_before = raw_before.get_data(picks=[ch_idx], start=start_sample, stop=end_sample)[0]
     time_vec = np.arange(len(data_before)) / sfreq
 
-    # Apply notch filter (after processing)
+    # Apply notch filter (after processing) - 60, 120, 180, 240 Hz
     raw_after = raw_before.copy()
     nyquist = sfreq / 2
-    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ * 2, NOTCH_FREQ * 3] if f < nyquist]
+    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ * 2, NOTCH_FREQ * 3, NOTCH_FREQ * 4] if f < nyquist]
     if notch_freqs:
         raw_after.notch_filter(freqs=notch_freqs, picks='all', verbose=False)
     data_after = raw_after.get_data(picks=[ch_idx], start=start_sample, stop=end_sample)[0]

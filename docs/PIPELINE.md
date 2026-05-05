@@ -112,7 +112,7 @@ Raw Data (BrainVision)
 - Load BrainVision data via MNE
 - Parse channels.tsv for good/bad channels
 - Parse events.tsv for seizure onset
-- Apply notch filter (60, 120, 180 Hz)
+- Apply notch filter (60, 120, 180, 240 Hz)
 - Extract 60-second epoch around seizure
 - Compute global valid times (all channels clean)
 

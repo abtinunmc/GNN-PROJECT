@@ -255,7 +255,7 @@ def preprocess_raw(raw: mne.io.Raw, good_channels: list, bad_channels: list) -> 
     raw.load_data()
 
     nyquist = raw.info['sfreq'] / 2
-    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ*2, NOTCH_FREQ*3] if f < nyquist]
+    notch_freqs = [f for f in [NOTCH_FREQ, NOTCH_FREQ*2, NOTCH_FREQ*3, NOTCH_FREQ*4] if f < nyquist]
     if notch_freqs:
         raw.notch_filter(freqs=notch_freqs, picks='all', verbose=False)
 

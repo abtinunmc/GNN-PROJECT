@@ -414,3 +414,70 @@ Updates:
   - Section 4.2: Added discussion on GNN vs RF performance gap
   - References: Added Katzmann 2020, Shorten 2019, Whalen 2024
   - Regenerated SOZ_Localization_GNN_Paper_v2.docx
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: hybrid_solutions
+Status: completed
+Description: Tested solutions to improve GNN AUC
+
+Solutions Tested:
+  1. MLP (no graph): AUC=0.742 - confirms graph helps (+2.1%)
+  2. Higher correlation thresholds (0.4-0.6): AUC=0.72-0.75 - worse
+  3. Stacking (RF+GNN): AUC=0.837 - best AUC but recall=0.40
+  4. GNN + RF feature: AUC=0.785, Recall=0.630 - BEST BALANCE
+
+Best Hybrid Model:
+  - Add RF prediction probability as 34th node feature
+  - GNN learns to refine predictions using connectivity
+  - AUC improved from 0.763 to 0.785 (+2.9%)
+  - Recall maintained at 0.630
+
+Paper Updates:
+  - Added Section 3.7: Hybrid Approaches to Improve AUC
+  - Added Table 7: Comparison of hybrid approaches
+  - Added CAR figures (Figures 4-6)
+  - Added bandpass filter figure (Figure 7)
+  - Updated conclusion with hybrid findings
+  - Regenerated SOZ_Localization_GNN_Paper_v2.docx
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: notch_filter_update
+Status: completed
+Description: Updated notch filter to include 4th harmonic (240 Hz)
+
+Notch frequencies: 60, 120, 180, 240 Hz
+Reason: 240 Hz is near the 250 Hz bandpass cutoff and could leak through
+
+Files updated:
+  - scripts/preprocess.py (lines 226, 567)
+  - scripts/preprocess_combined.py (line 258)
+  - paper/SOZ_Localization_GNN_Paper.md
+  - docs/PIPELINE.md
+
+Note: Existing processed data uses old notch (60, 120, 180 Hz).
+      Reprocessing required to apply new notch filter.
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: paper_final_updates
+Status: completed
+Description: Final paper updates with hybrid solutions and CAR figures
+
+Paper additions:
+  - Section 3.7: Hybrid Approaches to Improve AUC
+  - Table 7: Comparison of hybrid methods
+  - Best hybrid: GNN + RF feature (AUC 0.785, Recall 0.630)
+  - Added CAR figures (Figures 4-6)
+  - Added bandpass filter figure (Figure 7)
+  - Updated conclusion with hybrid findings
+  - Updated notch filter description (60, 120, 180, 240 Hz)
+
+Scripts added:
+  - scripts/test_solutions.py (MLP, stacking, RF feature tests)
+  - scripts/train_gnn_improved.py (improved GNN with regularization)
+
+Results files:
+  - data/processed/models/results_solutions.json
+  - data/processed/models/results_improved_gnn.json
