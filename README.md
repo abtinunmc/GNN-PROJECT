@@ -1,8 +1,8 @@
 # SOZ Localization GNN
 
-Graph Neural Network pipeline for Seizure Onset Zone (SOZ) localization using intracranial EEG data from OpenNeuro ds003029 (HUP iEEG dataset).
+Graph Neural Network pipeline for Seizure Onset Zone (SOZ) localization using intracranial EEG data from OpenNeuro datasets (ds003029 + ds004100).
 
-**Best Result**: Test AUC 0.730 with tuned GraphSAGE
+**Best Result**: Test AUC 0.768 with GraphSAGE on combined dataset (81 patients, 126 labeled recordings)
 
 ## Structure
 
@@ -41,17 +41,20 @@ python3 scripts/tune_gnn.py          # Hyperparameter tuning (Optuna)
 python3 scripts/train_gat.py         # Graph Attention Network
 python3 scripts/train_gin.py         # Graph Isomorphism Network
 python3 scripts/tune_gat.py          # GAT hyperparameter tuning
+
+# Baselines & Multi-seed Evaluation (for paper)
+python3 scripts/run_baselines_and_seeds.py  # RF, LR, SVM + GNN with 5 seeds
 ```
 
 ## Results
 
-| Model | Test AUC |
-|-------|----------|
-| **GraphSAGE (tuned)** | **0.730** |
-| GAT (tuned) | 0.702 |
-| GraphSAGE (baseline) | 0.697 |
-| GAT (baseline) | 0.685 |
-| GIN | 0.562 |
+| Model | Test AUC | Dataset |
+|-------|----------|---------|
+| **GraphSAGE (combined)** | **0.768** | ds003029 + ds004100 |
+| GraphSAGE + augmentation | 0.761 | ds003029 |
+| GraphSAGE (tuned) | 0.730 | ds003029 |
+| GAT (tuned) | 0.702 | ds003029 |
+| GIN | 0.562 | ds003029 |
 
 ## Notes
 

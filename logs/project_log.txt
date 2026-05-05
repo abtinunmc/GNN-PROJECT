@@ -358,3 +358,22 @@ Test F1: 0.2964
 Test Precision: 0.1920
 Test Recall: 0.6500
 Runtime (s): 35.0
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: baselines_and_seeds
+Status: script_created
+Description: Added baseline comparisons and multi-seed evaluation for paper
+Scripts created:
+  - scripts/run_baselines_and_seeds.py
+Baselines to evaluate:
+  - Random Forest (n_estimators=200, class_weight=balanced)
+  - Logistic Regression (class_weight=balanced)
+  - SVM RBF kernel (class_weight=balanced)
+GNN seeds: [42, 123, 456, 789, 2024]
+Output: data/processed/models/results_baselines_seeds.json
+Paper updates:
+  - Added Table 2: Baseline comparison
+  - Updated Tables 3-6 with mean ± std format
+  - Regenerated paper/SOZ_Localization_GNN_Paper_v2.docx
+Note: Requires PyTorch - run on GPU machine to generate results
