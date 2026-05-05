@@ -30,7 +30,10 @@
       "Bash(git init *)",
       "Bash(xargs ls *)",
       "Bash(gh auth *)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(awk '{if \\($3 ~ /\\\\.\\(pt|h5\\)$/\\) print $3}')",
+      "Bash(git remote *)",
+      "Bash(pandoc --version)"
     ]
   }
 }
