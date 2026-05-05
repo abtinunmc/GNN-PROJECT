@@ -1,0 +1,15 @@
+{
+  "hidden_dim": 128,
+  "num_layers": 3,
+  "num_heads": 4,
+  "dropout": 0.30858828382205233,
+  "attention_dropout": 0.16410153644473785,
+  "classifier_dropout": 0.5863005726957399,
+  "pretrain_lr": 0.00046110913996083407,
+  "finetune_lr": 0.00040158069342983017,
+  "weight_decay": 0.000489549843408152,
+  "batch_size": 16,
+  "freeze_epochs": 10,
+  "use_augmentation": false,
+  "correlation_threshold": 0.2284630666347572
+}

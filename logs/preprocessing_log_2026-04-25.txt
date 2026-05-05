@@ -1,0 +1,80 @@
+================================================================================
+SOZ Localization GNN - Preprocessing Log
+Date: 2026-04-25
+================================================================================
+
+CONFIGURATION
+-------------
+Dataset: OpenNeuro ds003029 (HUP iEEG)
+Data directory: ~/Desktop/ds003029
+Output directory: ~/Desktop/GNN-PROJECT-main/data/processed
+Notch filter: 60 Hz + harmonics
+Epoch window: +/- 30 seconds around seizure onset
+
+PROCESSING SUMMARY
+------------------
+Total recordings found: 106
+Subjects: 35
+Successfully processed: 99/106
+Failed: 7
+Runtime: ~200 seconds
+
+RESULTS
+-------
+Total channels: 7,636
+Sampling frequency: 1000.0 Hz
+Recordings with SOZ annotations: 30
+Recordings with global valid time intervals: 99
+Total valid signal time (all channels clean): 5,522.0 seconds
+
+FAILED RECORDINGS
+-----------------
+1. sub-pt11_ses-presurgery_task-ictal_acq-ecog_run-03_ieeg.vhdr
+   Reason: No seizure onset found
+
+2. sub-pt17_ses-presurgery_task-ictal_acq-ecog_run-01_ieeg.vhdr
+   Reason: No seizure onset found
+
+3. sub-pt17_ses-presurgery_task-ictal_acq-ecog_run-03_ieeg.vhdr
+   Reason: No seizure onset found
+
+4. sub-umf002_ses-presurgery_run-01
+   Reason: Invalid onset outside recording bounds
+
+5. sub-umf003_ses-presurgery_run-01
+   Reason: Invalid onset outside recording bounds
+
+6. sub-umf004_ses-presurgery_run-01
+   Reason: Invalid onset outside recording bounds
+
+7. sub-umf005_ses-presurgery_run-01
+   Reason: Invalid onset outside recording bounds
+
+SCRIPT FIXES APPLIED (2026-04-25)
+----------------------------------
+- Fixed syntax error: duplicate main() block at end of preprocess.py
+- Fixed output paths: HDF5 now saved to data/processed/h5/ (not data/processed/)
+- Fixed CSV paths: metadata.csv and failed_recordings.csv now saved to data/processed/csv/
+
+OUTPUT FILES
+------------
+1. data/processed/h5/preprocessed_ieeg.h5
+   - HDF5 with all preprocessed recordings
+   - Structure: one group per recording (named by .vhdr stem)
+   - Datasets: data, global_valid_times
+   - Attributes: channels, sfreq, onset, soz_channels, n_channels, total_valid_sec
+
+2. data/processed/csv/metadata.csv
+   - Columns: subject, session, run, n_channels, n_good_channels, n_samples,
+              sfreq, n_global_valid_intervals, total_valid_sec, soz_channels,
+              outcome, engel
+
+3. data/processed/csv/failed_recordings.csv
+   - QC log of all failed recordings with reasons
+
+4. data/processed/figures/preprocessing_demo.png
+5. data/processed/figures/preprocessing_multichannel.png
+
+================================================================================
+End of Log
+================================================================================

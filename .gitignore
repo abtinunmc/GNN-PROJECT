@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data and Artifacts
+# We explicitly ignore the massive .h5 files because they exceed GitHub's 100MB limit
+data/processed/h5/
+data/processed_combined/h5/
+*.h5
+
+# Large graph files (keep small model files)
+data/processed/graphs/graphs_augmented.pt
+data/processed_combined/graphs/graphs_combined.pt
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp

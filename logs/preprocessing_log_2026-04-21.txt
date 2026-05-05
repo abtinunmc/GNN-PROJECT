@@ -1,0 +1,101 @@
+================================================================================
+SOZ Localization GNN - Preprocessing Log
+Date: 2026-04-21
+================================================================================
+
+CONFIGURATION
+-------------
+Dataset: OpenNeuro ds003029 (HUP iEEG)
+Data directory: ~/Desktop/ds003029
+Output directory: ~/Documents/gnn project/preprocessed
+Notch filter: 60 Hz + harmonics
+Epoch window: +/- 30 seconds around seizure onset
+
+PROCESSING SUMMARY
+------------------
+Total recordings found: 106
+Subjects: 35
+Successfully processed: 103/106
+Failed: 3
+
+RESULTS
+-------
+Total channels: 7,840
+Sampling frequency: 1000.0 Hz
+Recordings with SOZ annotations: 30
+Recordings with global valid time intervals: 99
+Total valid signal time (all channels clean): 5,521.0 seconds
+
+FAILED RECORDINGS
+-----------------
+1. sub-pt11_ses-presurgery_task-ictal_acq-ecog_run-03_ieeg.vhdr
+   Reason: No seizure onset found
+
+2. sub-pt17_ses-presurgery_task-ictal_acq-ecog_run-01_ieeg.vhdr
+   Reason: No seizure onset found
+
+3. sub-pt17_ses-presurgery_task-ictal_acq-ecog_run-03_ieeg.vhdr
+   Reason: No seizure onset found
+
+OUTPUT FILES
+------------
+1. preprocessed/preprocessed_ieeg.h5
+   - Contains all preprocessed data
+   - HDF5 structure: one group per recording
+   - Datasets: data, global_valid_times
+   - Attributes: channels, sfreq, onset, soz_channels, n_channels, total_valid_sec
+
+2. preprocessed/metadata.csv
+   - Columns: subject, session, run, n_channels, n_good_channels, n_samples,
+              sfreq, n_global_valid_intervals, total_valid_sec, soz_channels,
+              outcome, engel
+
+3. preprocessed/preprocessing_demo.png
+   - Single-channel before/after visualization
+   - Shows time-domain signal and power spectrum
+   - Demonstrates 60 Hz line noise removal
+
+4. preprocessed/preprocessing_multichannel.png
+   - Multi-channel (10 channels) before/after visualization
+   - Shows raw vs notch-filtered signals
+
+PROCESSING DETAILS
+------------------
+Runtime: ~130 seconds
+
+Per-recording processing:
+1. Load BrainVision data via MNE
+2. Parse channels.tsv for good/bad channel status
+3. Parse events.tsv for seizure onset time
+4. Apply notch filter (60 Hz, 120 Hz, 180 Hz where applicable)
+5. Pick only good ECOG/SEEG channels
+6. Extract 60-second epoch around seizure onset
+7. Compute per-channel valid time intervals
+8. Intersect all channels to get global valid times
+9. Store in HDF5 with metadata
+
+METADATA SUMMARY (from metadata.csv)
+------------------------------------
+Subjects by site:
+- JHH (sub-jh*): 7 subjects, 31 recordings
+- NIH (sub-pt*): 14 subjects, 46 recordings
+- UMF (sub-umf*): 5 subjects, 5 recordings
+- UMMC (sub-ummc*): 9 subjects, 27 recordings
+
+Outcomes:
+- S (Seizure-free): Multiple recordings
+- F (Failure): Multiple recordings
+- NR (Not reported): Multiple recordings
+
+Engel scores: 1.0 (best) to 4.0 (worst), -1.0 for not reported
+
+NEXT STEPS
+----------
+1. Apply CAR (Common Average Reference) using good channels
+2. Extract features (band powers, connectivity)
+3. Build graph structure (channels as nodes)
+4. Train GNN for SOZ prediction
+
+================================================================================
+End of Log
+================================================================================

@@ -1,0 +1,33 @@
+================================================================================
+SOZ Localization GNN - CAR (Common Average Reference) Log
+Date: 2026-04-25
+================================================================================
+
+CONFIGURATION
+-------------
+Input:  data/processed/h5/preprocessed_ieeg.h5
+Output: data/processed/h5/preprocessed_ieeg_car.h5
+
+CAR Formula: x_car[ch, t] = x_raw[ch, t] - mean(x_raw[:, t])
+
+PROCESSING SUMMARY
+------------------
+Total recordings: 99
+Successfully processed: 99/99
+Failed: 0
+Runtime: ~95 seconds
+
+OUTPUT FILES
+------------
+1. data/processed/h5/preprocessed_ieeg_car.h5
+   - CAR-referenced data for all recordings
+   - Same HDF5 structure as input
+   - Added attribute: car_applied = True
+
+2. data/processed/figures/car_demo.png
+3. data/processed/figures/car_multichannel.png
+4. data/processed/figures/car_statistics.png
+
+================================================================================
+End of Log
+================================================================================

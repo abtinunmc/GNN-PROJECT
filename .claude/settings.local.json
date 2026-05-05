@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find ~/Desktop/ds003029/sub-jh101 -type f -name *.edf -o -name *.vhdr -o -name *.set)",
+      "Bash(python step1.py)",
+      "Bash(python3:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python preprocess.py)",
+      "Bash(pip install *)",
+      "Bash(nvidia-smi)",
+      "WebSearch",
+      "Bash(python *)",
+      "Bash(curl -s \"https://openneuro.org/api/datasets?limit=50\")",
+      "Bash(curl -s \"https://physionet.org/about/database/\")",
+      "Bash(aws s3 *)",
+      "Bash(echo \"Download started in background with PID $!\")",
+      "Read(//home/aakhtari/.conda/**)",
+      "Read(//home/aakhtari/anaconda3/**)",
+      "Bash(conda env *)",
+      "Bash(rtk read *)",
+      "Bash(/usr/local/mne-python/1.0.0_0/bin/python3 *)",
+      "Bash(rtk pip *)",
+      "Bash(pip3 --version)",
+      "Bash(/usr/bin/python3.9 *)",
+      "WebFetch(domain:antigravity.google)",
+      "Bash(rtk ls *)",
+      "Bash(rtk git *)",
+      "Bash(git init *)",
+      "Bash(xargs ls *)",
+      "Bash(gh auth *)",
+      "Bash(git config *)"
+    ]
+  }
+}

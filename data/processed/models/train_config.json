@@ -1,0 +1,14 @@
+{
+  "use_pretrained": true,
+  "epochs_trained": 100,
+  "best_val_auc": 0.9196855775803144,
+  "test_auc": 0.6973684210526316,
+  "test_accuracy": 0.7768924302788844,
+  "test_precision": 0.4873417721518987,
+  "test_recall": 0.4695121951219512,
+  "test_f1": 0.4782608695652174,
+  "learning_rate": 0.0001,
+  "batch_size": 8,
+  "freeze_encoder_epochs": 10,
+  "use_class_weights": true
+}

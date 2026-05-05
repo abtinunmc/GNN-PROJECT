@@ -1,0 +1,8 @@
+subject,session,run,sfreq,onset,recording_duration_sec,failure_reason
+sub-pt11,ses-presurgery,run-03,0.0,,,no_seizure_onset
+sub-pt17,ses-presurgery,run-01,0.0,,,no_seizure_onset
+sub-pt17,ses-presurgery,run-03,0.0,,,no_seizure_onset
+sub-umf002,ses-presurgery,run-01,1000.0,87.00014647058823,1.339,invalid_onset_outside_recording
+sub-umf003,ses-presurgery,run-01,499.7501249375312,59.99914696638656,1.968984,invalid_onset_outside_recording
+sub-umf004,ses-presurgery,run-01,1000.0,135.00036529411764,0.688,invalid_onset_outside_recording
+sub-umf005,ses-presurgery,run-01,1025.6410256410256,116.00041359633028,1.1895,invalid_onset_outside_recording

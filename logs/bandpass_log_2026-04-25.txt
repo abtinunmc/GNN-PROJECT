@@ -1,0 +1,44 @@
+================================================================================
+SOZ Localization GNN - Bandpass Filter Log
+Date: 2026-04-25
+================================================================================
+
+CONFIGURATION
+-------------
+Input:  data/processed/h5/preprocessed_ieeg_car.h5
+Output: data/processed/h5/preprocessed_ieeg_car_bp.h5
+
+Filter Type: Elliptic (Cauer)
+Low Cutoff:  1.0 Hz (removes DC drift)
+High Cutoff: 250.0 Hz (preserves HFOs)
+Order:       10
+Passband Ripple:      0.1 dB
+Stopband Attenuation: 60 dB
+
+PROCESSING SUMMARY
+------------------
+Total recordings: 99
+Successfully processed: 99/99
+Runtime: ~113 seconds
+
+NYQUIST ADJUSTMENTS
+-------------------
+Recordings with sampling rate < 500 Hz required adjusted cutoffs:
+
+- sub-umf003, sub-ummc001-003: sfreq=499.75 Hz → high_freq adjusted to 248.88 Hz
+- sub-ummc003, sub-ummc004, sub-ummc006, sub-ummc008: sfreq=249.88 Hz → high_freq adjusted to 123.94 Hz
+
+OUTPUT FILES
+------------
+1. data/processed/h5/preprocessed_ieeg_car_bp.h5 (~3.1 GB)
+   - Bandpass filtered data for all recordings
+   - Attributes added: bandpass_applied, bandpass_low, bandpass_high,
+                       filter_type, filter_order
+
+2. data/processed/figures/bandpass_filter_response.png
+3. data/processed/figures/bandpass_demo.png
+4. data/processed/figures/bandpass_bands.png
+
+================================================================================
+End of Log
+================================================================================

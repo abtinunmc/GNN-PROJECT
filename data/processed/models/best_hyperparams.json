@@ -1,0 +1,18 @@
+{
+  "hidden_dim": 128,
+  "num_layers": 2,
+  "dropout": 0.21430208845883933,
+  "classifier_dropout": 0.5507575485723885,
+  "pretrain_lr": 0.000122076821886086,
+  "finetune_lr": 0.0006067943121339634,
+  "weight_decay": 8.997513691985374e-05,
+  "batch_size": 16,
+  "freeze_epochs": 0,
+  "correlation_threshold": 0.3232834775979337,
+  "aug_edge_drop": 0.07599344831883123,
+  "aug_feat_noise": 0.010911505129312403,
+  "aug_feat_mask": 0.10003608178240622,
+  "mixup_alpha": 0.48049487905102894,
+  "smote_k_neighbors": 10,
+  "smote_ratio": 0.48252282420842363
+}

@@ -1,0 +1,10 @@
+{
+  "val_auc": 0.7510862939562929,
+  "test_auc": 0.7676976421636615,
+  "test_f1": 0.2964169381107492,
+  "test_precision": 0.19198312236286919,
+  "test_recall": 0.65,
+  "train_graphs": 70,
+  "val_graphs": 36,
+  "test_graphs": 20
+}

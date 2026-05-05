@@ -1,0 +1,11 @@
+{
+  "hidden_dim": 64,
+  "num_layers": 3,
+  "dropout": 0.3,
+  "n_features": 11,
+  "epochs_trained": 116,
+  "best_val_loss": 0.2987179664465097,
+  "learning_rate": 0.0005,
+  "batch_size": 32,
+  "correlation_threshold": 0.3
+}

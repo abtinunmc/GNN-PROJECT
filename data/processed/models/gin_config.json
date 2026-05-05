@@ -1,0 +1,13 @@
+{
+  "architecture": "GIN",
+  "hidden_dim": 128,
+  "num_layers": 3,
+  "mlp_hidden_ratio": 2,
+  "train_eps": true,
+  "dropout": 0.2,
+  "classifier_dropout": 0.5,
+  "use_augmentation": true,
+  "best_val_auc": 0.6602870813397129,
+  "test_auc": 0.562373183154582,
+  "test_f1": 0.0
+}

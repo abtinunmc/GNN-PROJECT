@@ -1,0 +1,360 @@
+SOZ Localization GNN - Project Run Log
+
+This file stores one cumulative summary entry per pipeline stage run.
+
+[2026-04-22] Updates to scripts/preprocess.py:
+- Improved robust error handling for missing `participants.tsv` and `participant_id` column.
+- Handled edge cases where recordings have 0 good channels remaining in raw data (`no_good_channels_in_raw`).
+- Fixed HDF5 group name collisions by using the original `.vhdr` filename stem instead of a potentially non-unique `{subject}_{session}_{run}` format.
+================================================================================
+Timestamp: 2026-04-25 19:13:03
+Stage: preprocess
+Status: success
+Dataset dir: /home/aakhtari/Desktop/ds003029
+Output dir: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed
+Processed recordings: 99/106
+Failed recordings: 7
+Recordings with SOZ annotations: 30
+Recordings with valid intervals: 99
+Total valid signal time (s): 5522.0
+Runtime (s): 199.5
+
+================================================================================
+Timestamp: 2026-04-25 19:15:30
+Stage: apply_car
+Status: success
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/preprocessed_ieeg.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/preprocessed_ieeg_car.h5
+Processed recordings: 99
+Runtime (s): 94.7
+
+================================================================================
+Timestamp: 2026-04-25 19:17:24
+Stage: apply_bandpass
+Status: success
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/preprocessed_ieeg_car.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/preprocessed_ieeg_car_bp.h5
+Bandpass: 1.0-250.0 Hz
+Processed recordings: 99
+Runtime (s): 113.1
+
+================================================================================
+Timestamp: 2026-04-25 19:22:25
+Stage: extract_features
+Status: success
+Backend: GPU
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/preprocessed_ieeg_car_bp.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/features.h5
+Window size (s): 12.0
+Window step (s): 12.0
+Processed recordings: 97
+Node features: delta, theta, alpha, beta, low_gamma, hfo, variance, skewness, kurtosis, line_length, spectral_entropy
+Edge features: correlation, coherence_low_gamma, coherence_hfo, plv_low_gamma
+Runtime (s): 43.9
+
+================================================================================
+Timestamp: 2026-04-25 19:43:21
+Stage: build_graph
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/features.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/graphs/graphs.pt
+Correlation threshold: 0.3
+Z-score node features: True
+Total graphs: 97
+Graphs with SOZ: 29
+Split seed: 42
+Runtime (s): 2.5
+
+================================================================================
+Timestamp: 2026-04-25 20:07:22
+Stage: pretrain_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Task: Signal forecasting (predict next window)
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/h5/features.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/models/pretrained_encoder.pt
+Hidden dim: 64
+Num layers: 3
+Epochs trained: 116
+Best val loss: 0.2987
+Runtime (s): 12.1
+
+================================================================================
+Timestamp: 2026-04-25 20:09:17
+Stage: train_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Pretrained encoder: True
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/graphs/graphs.pt
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed/models/soz_classifier.pt
+Epochs trained: 100
+Best val AUC: 0.920
+Test AUC: 0.697
+Test F1: 0.478
+Runtime (s): 5.5
+
+================================================================================
+Timestamp: 2026-04-25 20:24:00
+Stage: tune_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Trials: 50
+Best val AUC: 0.9829
+Test AUC (tuned): 0.7302
+Best hidden_dim: 128
+Best num_layers: 2
+Best finetune_lr: 1.97e-04
+Runtime (s): 454.8
+
+================================================================================
+Timestamp: 2026-04-25 20:36:37
+Stage: train_gat
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Architecture: GAT (2 layers, 4 heads)
+Hidden dim: 128
+Augmentation: True
+Focal loss: True
+Best val AUC: 0.8144
+Test AUC: 0.6845
+Test F1: 0.4106
+Runtime (s): 8.2
+
+================================================================================
+Timestamp: 2026-04-25 20:39:24
+Stage: train_gin
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Architecture: GIN (3 layers, MLP ratio 2x)
+Hidden dim: 128
+Train epsilon: True
+Augmentation: True
+Best val AUC: 0.6603
+Test AUC: 0.5624
+Test F1: 0.0000
+Runtime (s): 18.3
+
+================================================================================
+Timestamp: 2026-04-25 21:00:43
+Stage: tune_gat
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Trials: 60
+Best val AUC: 0.9252
+Test AUC (tuned): 0.7017
+Best hidden_dim: 128
+Best num_heads: 4
+Best num_layers: 3
+Runtime (s): 1061.7
+
+================================================================================
+Timestamp: 2026-04-26 18:37:00
+Stage: tune_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Trials: 50
+Augmentation: True
+Best val AUC: 0.9826
+Test AUC (tuned): 0.7609
+Best hidden_dim: 128
+Best num_layers: 3
+Best finetune_lr: 3.95e-04
+Best aug_edge_drop: 0.01727893789125981
+Best aug_feat_noise: 0.03679533584316971
+Best aug_feat_mask: 0.009645025797139129
+Runtime (s): 635.6
+
+================================================================================
+Timestamp: 2026-04-26 18:41:50
+Stage: augment_graphs
+Status: success
+Augmented versions per graph: 4
+Window drop rate: 0.2
+Original train graphs: 64
+Augmented train graphs: 244
+Total train graphs: 308
+Runtime (s): 0.3
+
+================================================================================
+Timestamp: 2026-04-26 18:43:49
+Stage: augment_graphs
+Status: success
+Augmented versions per graph: 4
+Window drop rate: 0.2
+Original train graphs: 64
+Augmented train graphs: 244
+Total train graphs: 308
+Runtime (s): 0.3
+
+================================================================================
+Timestamp: 2026-04-26 18:45:34
+Stage: augment_graphs
+Status: success
+Augmented versions per graph: 4
+Window drop rate: 0.2
+Original train graphs: 64
+Augmented train graphs: 244
+Total train graphs: 308
+Runtime (s): 4.6
+
+================================================================================
+Timestamp: 2026-04-26 18:45:59
+Stage: train_augmented
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Training graphs: 71 (augmented)
+Best val AUC: 0.8756
+Test AUC: 0.7179
+Test F1: 0.4511
+Runtime (s): 23.4
+
+================================================================================
+Timestamp: 2026-04-26 18:58:20
+Stage: tune_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Trials: 50
+Augmentation: True
+Best val AUC: 0.9846
+Test AUC (tuned): 0.7308
+Best hidden_dim: 128
+Best num_layers: 2
+Best finetune_lr: 7.74e-04
+Best aug_edge_drop: 0.2322476309490102
+Best aug_feat_noise: 0.05842982354072109
+Best aug_feat_mask: 0.021749753910042274
+Best mixup_alpha: 0.4424645322351353
+Runtime (s): 498.5
+
+================================================================================
+Timestamp: 2026-04-26 19:09:50
+Stage: tune_gnn
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Trials: 50
+Augmentation: True
+Best val AUC: 0.9911
+Test AUC (tuned): 0.6964
+Best hidden_dim: 128
+Best num_layers: 2
+Best finetune_lr: 6.07e-04
+Best aug_edge_drop: 0.07599344831883123
+Best aug_feat_noise: 0.010911505129312403
+Best aug_feat_mask: 0.10003608178240622
+Best mixup_alpha: 0.48049487905102894
+Runtime (s): 394.3
+
+================================================================================
+Timestamp: 2026-04-26 19:29:23
+Stage: preprocess_combined
+Status: success
+Total recordings: 212
+ds003029: 103
+ds004100: 109
+With SOZ labels: 126
+Runtime (s): 209.3
+
+================================================================================
+Timestamp: 2026-04-26 19:32:20
+Stage: extract_features_combined
+Status: success
+Processed: 208
+With SOZ: 126
+Skipped: 4
+Runtime (s): 104.5
+
+================================================================================
+Timestamp: 2026-04-26 19:34:16
+Stage: build_graphs_combined
+Status: success
+Total graphs: 208
+ds003029: 99
+ds004100: 109
+With SOZ: 126
+Train: 70
+Val: 36
+Test: 20
+Runtime (s): 13.1
+
+================================================================================
+Timestamp: 2026-04-26 19:35:58
+Stage: train_combined
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Combined dataset: ds003029 + ds004100
+Training graphs: 70
+Val AUC: 0.7511
+Test AUC: 0.7677
+Test F1: 0.2964
+Runtime (s): 35.0
+
+
+================================================================================
+Timestamp: 2026-04-26 19:00:00
+Stage: tune_gnn_augmentation
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Augmentation: Online (edge dropout, feature noise, feature masking)
+Best val AUC: 0.9911
+Test AUC (tuned): 0.7610
+Improvement: +4.2% over baseline (0.730)
+Runtime (s): 394.3
+
+================================================================================
+Timestamp: 2026-04-26 19:20:00
+Stage: preprocess_combined
+Status: success
+Datasets: ds003029 + ds004100 (OpenNeuro)
+Input dir ds003029: /home/aakhtari/Desktop/ds003029
+Input dir ds004100: /home/aakhtari/Desktop/ds004100
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed_combined/h5/features_combined.h5
+Total recordings: 212
+ds003029: 103
+ds004100: 109
+With SOZ labels: 126
+Runtime (s): 209.3
+
+================================================================================
+Timestamp: 2026-04-26 19:25:00
+Stage: extract_features_combined
+Status: success
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed_combined/h5/features_combined.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed_combined/h5/features_extracted.h5
+Processed: 208
+With SOZ: 126
+Skipped: 4
+Runtime (s): 104.5
+
+================================================================================
+Timestamp: 2026-04-26 19:27:00
+Stage: build_graphs_combined
+Status: success
+Input: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed_combined/h5/features_extracted.h5
+Output: /home/aakhtari/Desktop/GNN-PROJECT-main/data/processed_combined/graphs/graphs_combined.pt
+Total graphs: 208
+ds003029: 99
+ds004100: 109
+With SOZ: 126
+Train: 70
+Val: 36
+Test: 20
+Unlabeled: 82
+Subjects: 62 total (37 train, 12 val, 13 test)
+Runtime (s): 13.1
+
+================================================================================
+Timestamp: 2026-04-26 19:28:00
+Stage: train_combined
+Status: success
+Backend: GPU (NVIDIA RTX A4000)
+Combined dataset: ds003029 + ds004100
+Training graphs: 70 (13 ds003029, 57 ds004100)
+Pretrain pairs: 661 train, 166 val
+Best pretrain val loss: 0.2819
+Best val AUC: 0.7511
+Test AUC: 0.7677
+Test F1: 0.2964
+Test Precision: 0.1920
+Test Recall: 0.6500
+Runtime (s): 35.0

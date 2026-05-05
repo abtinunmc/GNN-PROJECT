@@ -1,0 +1,91 @@
+================================================================================
+SOZ Localization GNN - Feature Extraction Log
+Date: 2026-04-25
+================================================================================
+
+CONFIGURATION
+-------------
+Input:  data/processed/h5/preprocessed_ieeg_car_bp.h5
+Output: data/processed/h5/features.h5
+
+Backend:        GPU (NVIDIA RTX A4000, 16 GB VRAM, CUDA 11.4)
+Window size:    12.0 seconds (non-overlapping)
+Window step:    12.0 seconds
+Min window:     1024 samples
+
+PROCESSING SUMMARY
+------------------
+Total recordings: 99
+Successfully processed: 97/99
+Skipped: 2 (no clean windows after valid-time windowing)
+Runtime: 43.9 seconds
+
+SKIPPED RECORDINGS
+------------------
+1. sub-jh102_ses-presurgery_task-ictal_acq-ecog_run-04_ieeg
+   Reason: No clean windows after valid-time windowing
+
+2. sub-ummc008_ses-presurgery_task-ictal_acq-ecog_run-01_ieeg
+   Reason: No clean windows after valid-time windowing
+
+NODE FEATURES (per channel, 11 total)
+--------------------------------------
+Band powers (6):
+  - delta      (1-4 Hz)
+  - theta      (4-8 Hz)
+  - alpha      (8-12 Hz)
+  - beta       (15-25 Hz)
+  - low_gamma  (35-50 Hz)
+  - hfo        (80-250 Hz)
+
+Statistical (5):
+  - variance
+  - skewness
+  - kurtosis
+  - line_length
+  - spectral_entropy
+
+EDGE FEATURES (per channel pair, 4 total)
+------------------------------------------
+  - correlation          (Pearson)
+  - coherence_low_gamma  (35-50 Hz)
+  - coherence_hfo        (80-250 Hz)
+  - plv_low_gamma        (35-50 Hz Phase Locking Value)
+
+AGGREGATIONS
+------------
+Window-level features aggregated across windows using: mean, std, max
+Final node_features shape: (n_channels, 11 * 3) = (n_channels, 33)
+Final edge_features shape: (n_channels, n_channels, 3) per edge type
+
+SAMPLE OUTPUT (sub-jh101_ses-presurgery_task-ictal_acq-ecog_run-01_ieeg)
+--------------------------------------------------------------------------
+  n_windows:              5
+  window_node_features:   (5, 107, 11)
+  node_features:          (107, 33)
+  labels:                 (107,)
+  edge correlation:       (107, 107, 3)
+  edge coherence_low_gamma: (107, 107, 3)
+  edge coherence_hfo:     (107, 107, 3)
+  edge plv_low_gamma:     (107, 107, 3)
+
+GPU ACCELERATION NOTES
+----------------------
+- Welch PSD: batched via torch.fft.rfft (all channels simultaneously)
+- Correlation: vectorised matrix multiply on GPU
+- Coherence: batched cross-spectral density via torch.fft
+- PLV: vectorised exp(i * phase_diff) across all channel pairs on GPU
+- Estimated CPU time: ~2.5 hours
+- Actual GPU time:    43.9 seconds (~200x speedup)
+
+OUTPUT FILES
+------------
+1. data/processed/h5/features.h5
+   - Per recording: labels, window_node_features, node_features,
+                    window_times, edge_features/{name}_windows, edge_features/{name}
+   - Root attributes: node_feature_names, edge_feature_names,
+                      aggregation_names, window_sec, window_step_sec
+
+================================================================================
+End of Log
+================================================================================
