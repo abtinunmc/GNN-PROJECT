@@ -377,3 +377,40 @@ Paper updates:
   - Updated Tables 3-6 with mean ± std format
   - Regenerated paper/SOZ_Localization_GNN_Paper_v2.docx
 Note: Requires PyTorch - run on GPU machine to generate results
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: baselines_and_seeds
+Status: completed
+Backend: GPU (NVIDIA RTX A4000)
+Description: Ran baseline comparisons and multi-seed GNN evaluation
+
+Classical ML Baselines:
+  - Random Forest: AUC=0.847, F1=0.373, Precision=0.326, Recall=0.436
+  - Logistic Regression: AUC=0.741, F1=0.336, Precision=0.238, Recall=0.571
+  - Lasso (L1): AUC=0.738, F1=0.338, Precision=0.240, Recall=0.571
+  - Ridge (L2): AUC=0.741, F1=0.336, Precision=0.238, Recall=0.571
+  - Logistic Regression (tuned CV): AUC=0.742, Best C=0.359
+  - SVM (RBF): AUC=0.713, F1=0.097, Precision=0.200, Recall=0.064
+
+GNN (GraphSAGE) - 5 seeds [42, 123, 456, 789, 2024]:
+  - Test AUC: 0.763 ± 0.008
+  - Test F1: 0.273 ± 0.007
+  - Test Precision: 0.175 ± 0.006
+  - Test Recall: 0.623 ± 0.014
+
+Key Finding: Random Forest achieved higher AUC but GNN had 43% higher recall
+Runtime: 22s
+
+================================================================================
+Timestamp: 2026-05-05
+Stage: paper_update
+Status: completed
+Description: Updated paper with baseline results and discussion
+
+Updates:
+  - Table 2: Added baseline comparison (RF, LR, SVM, GNN)
+  - Table 5: Updated with multi-seed confidence intervals
+  - Section 4.2: Added discussion on GNN vs RF performance gap
+  - References: Added Katzmann 2020, Shorten 2019, Whalen 2024
+  - Regenerated SOZ_Localization_GNN_Paper_v2.docx

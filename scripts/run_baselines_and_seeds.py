@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.svm import SVC
 from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score
 from tqdm import tqdm
@@ -198,6 +198,54 @@ def run_baselines(train_graphs, val_graphs, test_graphs):
     lr_pred = lr.predict_proba(X_test)[:, 1]
     results["LogisticRegression"] = evaluate_metrics(y_test, lr_pred)
     print(f"  Test AUC: {results['LogisticRegression']['auc']:.4f}")
+
+    # Lasso (L1-regularized Logistic Regression)
+    print("\nTraining Lasso (L1 Logistic Regression)...")
+    lasso = LogisticRegression(
+        penalty="l1",
+        max_iter=1000,
+        class_weight="balanced",
+        random_state=42,
+        solver="saga",
+        C=1.0
+    )
+    lasso.fit(X_train, y_train)
+    lasso_pred = lasso.predict_proba(X_test)[:, 1]
+    results["Lasso"] = evaluate_metrics(y_test, lasso_pred)
+    print(f"  Test AUC: {results['Lasso']['auc']:.4f}")
+
+    # Ridge (L2-regularized Logistic Regression)
+    print("\nTraining Ridge (L2 Logistic Regression)...")
+    ridge = LogisticRegression(
+        penalty="l2",
+        max_iter=1000,
+        class_weight="balanced",
+        random_state=42,
+        solver="lbfgs",
+        C=1.0
+    )
+    ridge.fit(X_train, y_train)
+    ridge_pred = ridge.predict_proba(X_test)[:, 1]
+    results["Ridge"] = evaluate_metrics(y_test, ridge_pred)
+    print(f"  Test AUC: {results['Ridge']['auc']:.4f}")
+
+    # Tuned Logistic Regression (CV over C parameter)
+    print("\nTraining Tuned Logistic Regression (CV)...")
+    lr_tuned = LogisticRegressionCV(
+        Cs=10,
+        cv=5,
+        penalty="l2",
+        max_iter=1000,
+        class_weight="balanced",
+        random_state=42,
+        solver="lbfgs",
+        scoring="roc_auc"
+    )
+    lr_tuned.fit(X_train, y_train)
+    lr_tuned_pred = lr_tuned.predict_proba(X_test)[:, 1]
+    results["LogisticRegression_Tuned"] = evaluate_metrics(y_test, lr_tuned_pred)
+    print(f"  Test AUC: {results['LogisticRegression_Tuned']['auc']:.4f}")
+    print(f"  Best C: {lr_tuned.C_[0]:.4f}")
 
     # SVM
     print("\nTraining SVM (RBF kernel)...")
