@@ -2,7 +2,7 @@
 
 Graph Neural Network pipeline for Seizure Onset Zone (SOZ) localization using intracranial EEG data from OpenNeuro datasets (ds003029 + ds004100).
 
-**Best Result**: Test AUC 0.768 with GraphSAGE on combined dataset (81 patients, 126 labeled recordings)
+**Best Result**: Test AUC **0.785** with hybrid GNN + RF feature (81 patients, 126 labeled recordings, 63% recall)
 
 ## Structure
 
@@ -48,13 +48,16 @@ python3 scripts/run_baselines_and_seeds.py  # RF, LR, SVM + GNN with 5 seeds
 
 ## Results
 
-| Model | Test AUC | Dataset |
-|-------|----------|---------|
-| **GraphSAGE (combined)** | **0.768** | ds003029 + ds004100 |
-| GraphSAGE + augmentation | 0.761 | ds003029 |
-| GraphSAGE (tuned) | 0.730 | ds003029 |
-| GAT (tuned) | 0.702 | ds003029 |
-| GIN | 0.562 | ds003029 |
+| Model | Test AUC | Test Recall | Dataset |
+|-------|----------|-------------|---------|
+| **GNN + RF feature (hybrid)** | **0.785** | **0.630** | ds003029 + ds004100 |
+| Random Forest | 0.847 | 0.436 | ds003029 + ds004100 |
+| GraphSAGE (combined) | 0.768 | 0.650 | ds003029 + ds004100 |
+| GraphSAGE (5 seeds) | 0.763 ± 0.008 | 0.623 ± 0.014 | ds003029 + ds004100 |
+| GraphSAGE + augmentation | 0.761 | 0.520 | ds003029 |
+| GraphSAGE (tuned) | 0.730 | 0.400 | ds003029 |
+| GAT (tuned) | 0.702 | 0.411 | ds003029 |
+| GIN | 0.562 | 0.000 | ds003029 |
 
 ## Notes
 
